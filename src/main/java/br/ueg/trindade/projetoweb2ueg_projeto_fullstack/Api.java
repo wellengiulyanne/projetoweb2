@@ -2,7 +2,11 @@ package br.ueg.trindade.projetoweb2ueg_projeto_fullstack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,30 +14,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class Api {
     
+@Autowired
+private UsuarioRepository usuarioRepository;
+
+
 @GetMapping("/usuarios")
-public List<Usuario> getAllUsuariosWithClass() {
-List<Usuario> users = new ArrayList<>();
-users.add(new Usuario("João","joao123","senha123","joao@example.com"));
-
-users.add(new Usuario("Maria","maria456","senha456","maria@example.com"));
-
-return users;
+public List<Usuario> getAllUsuarios() {
+return usuarioRepository.findAll();
+}
+@PostMapping("/usuarios")
+public Usuario createUsuario(@RequestBody Usuario usuario) {
+return usuarioRepository.save(usuario);
 }
 
+@Autowired
+private PermissaoRepository permissaoRepository;
 @GetMapping("/permissao")
-public List<Permissao> listarPermissao() {
-    return Arrays.asList(
-        new Permissao(1L, "ADMIN", "Administrador"),
-        new Permissao(2L, "USUARIO", "Usuário comum")
-    );
+
+@Autowired
+public List<Permissao> getAllPermissao() {
+return permissaoRepository.findAll();
+}
+@PostMapping("/permissao")
+public Permissao createPermissao(@RequestBody Permissao permissao) {
+return permissaoRepository.save(permissao);
 }
 
-@GetMapping("/perfis")
-public List<Perfil> listarPerfis() {
-    return Arrays.asList(
-        new Perfil(1L, "Administrador"),
-        new Perfil(2L, "Usuário")
-    );
+@Autowired
+private PerfilRepository perfilRepository;
+@GetMapping("/perfil")
+public List<Perfil> getAllPerfil() {
+return perfilRepository.findAll();
+}
+@PostMapping("/perfil")
+public Perfil createPerfil(@RequestBody Perfil perfil) {
+return perfilRepository.save(perfil);
 }  
 }
 
