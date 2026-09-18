@@ -1,21 +1,58 @@
+
+// src/components/PermissaoList.tsx
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Permissao } from "../types/Permissao";
 import PermissaoItem from "./PermissaoItem";
+import PermissaoForm from "./PermissaoForm";
 
 function PermissaoList() {
-    const [permissao, setPermissao] = useState<Permissao[]>([]);
-    useEffect(() => {
+    const [permissoes, setPermissoes] = useState<Permissao[]>([]);
+    const [editando, setEditando] = useState<Permissao | null>(null);
+
+    function carregarPermissoes() {
         api.get<Permissao[]>("/permissao").then((resposta) => {
-            setPermissao(resposta.data);
+            setPermissoes(resposta.data);
         });
+    }
+
+    useEffect(() => {
+        carregarPermissoes();
     }, []);
+
+    async function excluir(id: number) {
+        await api.delete(`/permissao/${id}`);
+        carregarPermissoes();
+    }
+
     return (
-        <ul>
-            {permissao.map((permissao) => (
-                <PermissaoItem key={permissao.id} permissao={permissao} />
-            ))}
-        </ul>
+        <div>
+            <PermissaoForm
+                key={editando?.id ?? "novo"}
+                permissaoEditando={editando}
+                onPermissaoSalva={() => {
+                    carregarPermissoes();
+                    setEditando(null);
+                }}
+            />
+
+            <ul>
+                {permissoes.map((permissao) => (
+                    <li key={permissao.id}>
+                        <PermissaoItem permissao={permissao} />
+
+                        <button onClick={() => setEditando(permissao)}>
+                            Editar
+                        </button>
+
+                        <button onClick={() => excluir(permissao.id)}>
+                            Excluir
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 }
+
 export default PermissaoList;
