@@ -1,21 +1,6 @@
-import UsuarioList from "./components/UsuarioList";
-import PermissaoList from "./components/PermissaoList";
-import PerfilList from "./components/PerfilList";
-
+import UsuariosPage from "./pages/UsuarioPage";
 
 function App() {
-    return (
-        <div>
-            <h1>Usuários cadastrados</h1>
-            <UsuarioList />
-
-            <h1>Permissões cadastradas</h1>
-            <PermissaoList />
-
-            <h1>Perfil</h1>
-            <PerfilList /> 
-        </div>
-    );
+return <UsuariosPage />;
 }
-
 export default App;

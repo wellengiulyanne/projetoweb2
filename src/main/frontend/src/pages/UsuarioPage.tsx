@@ -2,26 +2,26 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
-import UsuarioItem from "./UsuarioItem";
-import UsuarioForm from "./UsuarioForm";
+import UsuarioItem from "../components/UsuarioItem";
+import UsuarioForm from "../components/UsuarioForm";
 
-function UsuarioList() {
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+function UsuarioPage() {
+    const [usuario, setUsuario] = useState<Usuario[]>([]);
     const [editando, setEditando] = useState<Usuario | null>(null);
 
-    function carregarUsuarios() {
+    function carregarUsuario() {
         api.get<Usuario[]>("/usuarios").then((resposta) => {
-            setUsuarios(resposta.data);
+            setUsuario(resposta.data);
         });
     }
 
     useEffect(() => {
-        carregarUsuarios();
+        carregarUsuario();
     }, []);
 
     async function excluir(id: number) {
         await api.delete(`/usuarios/${id}`);
-        carregarUsuarios();
+        carregarUsuario();
     }
 
     return (
@@ -30,13 +30,13 @@ function UsuarioList() {
                 key={editando?.id ?? "novo"}
                 usuarioEditando={editando}
                 onUsuarioSalvo={() => {
-                    carregarUsuarios();
+                    carregarUsuario();
                     setEditando(null);
                 }}
             />
 
             <ul>
-                {usuarios.map((usuario) => (
+                {usuario.map((usuario) => (
                     <li key={usuario.id}>
                         <UsuarioItem usuario={usuario} />
                         <button onClick={() => setEditando(usuario)}>Editar</button>
@@ -48,4 +48,4 @@ function UsuarioList() {
     );
 }
 
-export default UsuarioList;
+export default UsuarioPage;
